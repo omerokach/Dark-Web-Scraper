@@ -1,9 +1,20 @@
-const express = require('express');
-const app = require('./app');
+const app = require("./app");
+const mongoose = require("mongoose");
 const PORT = 8080;
 
 app.listen(PORT, () => {
-    console.log('app listeting to port', PORT);
+  mongoose
+    .connect("mongodb://localhost:27017/mongodb", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      useCreateIndex: true,
+    })
+    .then(() => {
+      console.log("mongodb connected");
+    })
+    .catch(() => {
+      console.log("there was a problem connecting to mongodb");
+    });
+  console.log("app listeting to port", PORT);
 });
-
-
