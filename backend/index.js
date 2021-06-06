@@ -4,10 +4,10 @@ const PORT = 8080;
 
 app.listen(PORT, () => {
   mongoose
-    .connect("mongodb://localhost:27017/mongodb", {
+    .connect("mongodb://localhost:27017/onionScraper", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: false,
+      useFindAndModify: false,  
       useCreateIndex: true,
     })
     .then(() => {
@@ -18,3 +18,5 @@ app.listen(PORT, () => {
     });
   console.log("app listeting to port", PORT);
 });
+
+module.exports = mongoose;

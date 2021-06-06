@@ -1,5 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const addPost = require('../utils/utils')
 
 module.exports.dataGet = async (req, res) => {
   try {
@@ -9,18 +10,17 @@ module.exports.dataGet = async (req, res) => {
         port: 8118,
       },
     });
-    const totalDataArray = [];
+    const totalPostsArray = [];
     const $ = cheerio.load(response.data);
     $(".col-sm-5").each((i, element) => {
-      let string = JSON.stringify($(element).text());
-      console.log(string);
-      let newstr = string.replace(/\\t|\\n|"/g, (match) => {
+      let titleString = JSON.stringify($(element).text());
+      let newstr = titleString.replace(/\\t|\\n|"/g, (match) => {
         return "";
       });
-      totalDataArray.push({ title: newstr });
+      totalPostsArray.push({ title: newstr });
     });
     $("ol").each((i, element) => {
-      totalDataArray[i].body = $(element)
+      totalPostsArray[i].body = $(element)
         .children()
         .text()
         .replace(/\s\s+/g, " ");
@@ -32,13 +32,20 @@ module.exports.dataGet = async (req, res) => {
           return "";
         }
       );
-      const by = elementText.match(/(?<=(by ))(.*?)(?= (at))/g);
+      const author = elementText.match(/(?<=(by ))(.*?)(?= (at))/g);
       const at = elementText.match(/(?<=(at ))(.*?)(?=")/g);
-      totalDataArray[i].author = by[0];
-      totalDataArray[i].date = at[0];
+      if (
+        author === "Anonymous" ||
+        author === "Unknown" ||
+        author === "Guest"
+      ) {
+        author = "Anonymous";
+      }
+      totalPostsArray[i].author = author[0];
+      totalPostsArray[i].date = at[0];
     });
-    console.log(totalDataArray);
-    res.send(totalDataArray);
+    await addPost(totalPostsArray);
+    res.send(totalPostsArray);
   } catch (error) {
     console.log(error);
     res.send(error);
