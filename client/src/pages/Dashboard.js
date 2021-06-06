@@ -7,6 +7,7 @@ function Dashboard(props) {
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState("");
   const history = useHistory();
+  console.log(currentUser);
   const handleLogOut = async () => {
     setError("");
     try {

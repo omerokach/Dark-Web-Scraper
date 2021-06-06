@@ -8,7 +8,7 @@ const Signup = () => {
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
   const userNameRef = useRef();
-  const { signup } = useAuth();
+  const { signup, setCurrentUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
@@ -22,8 +22,8 @@ const Signup = () => {
         setError("");
         setLoading(true);
         await signup(emailRef.current.value, passwordRef.current.value);
-        axios.post("http://localhost:8080/api/user", {emailRef.current.value, passwordRef.current.value})
-
+        axios.post("http://localhost:8080/api/user", {name: userNameRef.current.value,email:emailRef.current.value, picture: 'https://www.pngitem.com/pimgs/m/522-5220445_anonymous-profile-grey-person-sticker-glitch-empty-profile.png'});
+        setCurrentUser({name: userNameRef,email:emailRef.current.value, picture: ''});
       history.push("/");
     } catch (error) {
       console.log(error);
@@ -42,6 +42,10 @@ const Signup = () => {
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required></Form.Control>
+            </Form.Group>
+            <Form.Group id="name">
+              <Form.Label>Name</Form.Label>
+              <Form.Control type="text" ref={userNameRef} required></Form.Control>
             </Form.Group>
             <Form.Group id="password">
               <Form.Label>Password</Form.Label>

@@ -72,7 +72,8 @@ export function AuthProvider({ children }) {
     resetPassword,
     updateEmail,
     updatePassword,
-    loginWithGoogle
+    loginWithGoogle,
+    setCurrentUser
   };
 
   return (
