@@ -1,22 +1,21 @@
-import React,{useState} from "react";
-import { Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useHistory } from "react-router";
+import axios from "axios";
+import Header from "../components/Header";
 
 function Dashboard(props) {
-  const { currentUser, logout } = useAuth();
-  const [error, setError] = useState("");
-  const history = useHistory();
+  const { currentUser } = useAuth();
+
+  const getPosts = async () => {
+    const res = await axios.get("http://localhost:8080/api/posts");
+    return res
+  }
+
+  useEffect(async () => {
+    const posts = await getPosts();
+    console.log(posts);
+  }, []);
   console.log(currentUser);
-  const handleLogOut = async () => {
-    setError("");
-    try {
-      await logout();
-      history.push("/login");
-    } catch (error) {
-      setError("Failed to log out");
-    }
-  };
 
   return (
     <div>
@@ -27,9 +26,7 @@ function Dashboard(props) {
           alignItems: "center",
         }}
       >
-        <Button className="logout-button navigate" onClick={handleLogOut}>
-          Log Out
-        </Button>
+        <Header/>
       </header>
       <h1>Dashboard</h1>
     </div>

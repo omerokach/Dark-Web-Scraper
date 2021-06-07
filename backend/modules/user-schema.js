@@ -7,4 +7,4 @@ const userScheman = new mogoose.Schema({
     keyWords: [String]
 });
 
-module.exports = mogoose.model("Users", userScheman);
+module.exports = mogoose.model("User", userScheman);

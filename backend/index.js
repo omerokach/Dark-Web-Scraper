@@ -11,12 +11,12 @@ app.listen(PORT, () => {
       useCreateIndex: true,
     })
     .then(() => {
-      console.log("mongodb connected");
+      console.log("Mongodb connected");
     })
     .catch(() => {
-      console.log("there was a problem connecting to mongodb");
+      console.log("There was a problem connecting to mongodb");
     });
-  console.log("app listeting to port", PORT);
+  console.log("App listeting to port", PORT);
 });
 
 module.exports = mongoose;

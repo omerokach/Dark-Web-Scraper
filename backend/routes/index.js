@@ -4,8 +4,8 @@ const dataRoute = require('./data');
 const postRoute = require('./posts');
 const userRoute = require('./user');
 
-router.use('/data', postRoute);
-router.use('/v1', postRoute);
+router.use('/data', dataRoute);
+router.use('/posts', postRoute);
 router.use('/user', userRoute);
 
 module.exports = router

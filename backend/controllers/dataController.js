@@ -1,6 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-const addPost = require('../utils/utils')
+const {addPost} = require('../utils/utils')
 
 module.exports.dataGet = async (req, res) => {
   try {
