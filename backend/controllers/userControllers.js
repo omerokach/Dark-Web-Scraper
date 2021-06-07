@@ -5,6 +5,7 @@ module.exports.user_post = async (req, res) => {
   const { email } = req.body;
   const ifExist = await ifExistUser(email);
   if (ifExist.length === 0) {
+    console.log(ifExist);
     try {
       const res = await User.create(req.body);
       console.log(res);

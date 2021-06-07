@@ -29,7 +29,7 @@ const Signup = () => {
           "https://www.pngitem.com/pimgs/m/522-5220445_anonymous-profile-grey-person-sticker-glitch-empty-profile.png",
       });
       setCurrentUser({
-        name: userNameRef,
+        name: userNameRef.current.value,
         email: emailRef.current.value,
         picture: "",
       });
