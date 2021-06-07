@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import Header from "../components/Header";
-
+import PostCard from "../components/PostCard";
 function Dashboard(props) {
   const { currentUser } = useAuth();
   const [posts, setPosts] = useState([]);
@@ -10,10 +10,11 @@ function Dashboard(props) {
   const getPosts = async () => {
     const res = await axios.get("http://localhost:8080/api/posts");
     return res.data;
-  }
+  };
 
   useEffect(async () => {
     const posts = await getPosts();
+    console.log(posts);
     setPosts(posts);
     console.log(posts);
   }, []);
@@ -29,9 +30,11 @@ function Dashboard(props) {
           alignItems: "center",
         }}
       >
-        <Header/>
+        <Header posts={posts}/>
       </header>
-      <h1>Dashboard</h1>
+      {posts?.map((post) => (
+        <PostCard post={post} />
+      ))}
     </div>
   );
 }

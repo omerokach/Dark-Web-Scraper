@@ -4,6 +4,13 @@ const {addPost} = require('../utils/utils')
 
 module.exports.dataGet = async (req, res) => {
   try {
+    const pieChartData = [
+      {
+        subject:,
+        countShows:,
+        color
+      }
+    ]
     const response = await axios.get("http://nzxj65x32vh2fkhk.onion/all", {
       proxy: {
         host: "localhost",

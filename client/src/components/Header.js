@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header() {
+export default function Header({posts}) {
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState("");
   const history = useHistory();
@@ -139,7 +139,7 @@ export default function Header() {
     >
       <MenuItem>
         <Button onClick={handleLogOut} variant="contained" color="primary">
-          Primary
+          LOGOUT
         </Button>
       </MenuItem>
     </Menu>
@@ -159,6 +159,9 @@ export default function Header() {
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
             Dark-Web Scraper
+          </Typography>
+          <Typography className={classes.title} variant="h6" noWrap>
+            <span style={{margin:"1rem"}}>There are {posts.length} posts</span> 
           </Typography>
           <Avatar id="avatar" alt="Remy Sharp" src={currentUser.picture} /> 
           <div className={classes.search}>
