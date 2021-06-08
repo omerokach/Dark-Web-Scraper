@@ -3,9 +3,9 @@ const app = express();
 const cors = require("cors");
 const api = require("./routes/index.js");
 const { scraper } = require("./utils/utils");
-const CronJob = require("cron").CronJob;
+var cron = require('node-cron');
 
-const job = new CronJob("0 */2 * * * *", async function () {
+cron.schedule('20 * * * * * * * *', async () => {
   const res = await scraper();
   if (res.status === "success") {
     console.log("Scraper Success");
@@ -13,8 +13,6 @@ const job = new CronJob("0 */2 * * * *", async function () {
     console.log(res);
   }
 });
-console.log("cron start");
-job.start();
 
 app.use(cors());
 

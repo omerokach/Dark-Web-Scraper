@@ -17,3 +17,29 @@ module.exports.user_post = async (req, res) => {
     res.status(409).send("User already exist");
   }
 };
+
+module.exports.addKeyWords = async (req, res) => {
+  const { userEmail, keyWordsArr } = req.body;
+  console.log(keyWordsArr);
+  try {
+    let user = await User.findOneAndUpdate(
+      { email: userEmail },
+      { keyWords: keyWordsArr },
+      {
+        new: true,
+      }
+    );
+    if (!user) {
+      throw "No user with this email";
+    }
+    console.log(user);
+    res.status(200).json(user);
+  } catch (error) {
+    if (error === "No user with this email") {
+      return res.status(409).send(error);
+    }else{
+      console.log(error.message);
+      return res.status(500).send(error);
+    }
+  }
+};

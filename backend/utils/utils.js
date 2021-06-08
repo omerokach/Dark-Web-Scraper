@@ -1,13 +1,18 @@
 const Post = require("../modules/post-schema");
 const User = require("../modules/user-schema");
 const axios = require("axios");
-const scraperStatus = {
-  status : "success",
-  newPosts: [],
-  newPostsLength: 0
-};
-
 const cheerio = require("cheerio");
+const NLPCloudClient = require("nlpcloud");
+const client = new NLPCloudClient(
+  "en_core_web_lg",
+  "b6af9fc6d26c38064cf2b8cb0d50d3f277567d33"
+);
+const { labeledWords } = require("./wordFilter");
+const scraperStatus = {
+  status: "success",
+  newPosts: [],
+  newPostsLength: 0,
+};
 
 const ifExistUser = async (email) => {
   const ifExist = await User.find({ email: email });
@@ -18,19 +23,34 @@ const addPost = async (postsArray) => {
   const newPosts = [];
   for (const post of postsArray) {
     const findPost = await Post.find({ body: post.body, title: post.title });
+    console.log(findPost);
     if (findPost.length === 0) {
       try {
-        newPosts.push(post)
+        newPosts.push(post);
         const res = await Post.create(post);
       } catch (error) {
         console.log(error);
       }
     }
   }
-  scraperStatus.status = 'success'
-  scraperStatus.newPosts = newPosts
-  scraperStatus.newPostsLength = newPosts.length
+  scraperStatus.status = "success";
+  scraperStatus.newPosts = newPosts;
+  scraperStatus.newPostsLength = newPosts.length;
   return;
+};
+
+const tagFunc = async (title) => {
+  const tag = 'other';
+  const promise = labeledWords.forEach((word) => {
+    let search = `(?=.*)${word.keyWord}(?<=.*)`;
+    let regex = new RegExp(search, "i");
+    if (regex.test(title)) {
+      tag = word.label;
+    }
+  });
+  Promise.all(promise).then(()=> {
+    return tag
+  })
 };
 
 const scraper = async () => {
@@ -48,7 +68,8 @@ const scraper = async () => {
       let newstr = titleString.replace(/\\t|\\n|"/g, (match) => {
         return "";
       });
-      totalPostsArray.push({ title: newstr });
+      const tagsForTitle = tagFunc(newstr);
+      totalPostsArray.push({ title: newstr, tags: tagsForTitle });
     });
     $("ol").each((i, element) => {
       totalPostsArray[i].body = $(element)
@@ -76,13 +97,13 @@ const scraper = async () => {
       totalPostsArray[i].date = at[0];
     });
     await addPost(totalPostsArray);
-    return "success"
+    return "success";
   } catch (error) {
-    scraperStatus.status = 'failed'
-    scraperStatus.newPosts = []
-    scraperStatus.newPostsLength = 0
+    scraperStatus.status = "failed";
+    scraperStatus.newPosts = [];
+    scraperStatus.newPostsLength = 0;
     console.log(error);
-    return error
+    return error;
   }
 };
 
