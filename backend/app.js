@@ -5,13 +5,12 @@ const api = require("./routes/index.js");
 const { scraper } = require("./utils/utils");
 const CronJob = require("cron").CronJob;
 
-console.log("Before job instantiation");
-const job = new CronJob("0 */2 * * * *", function () {
-  const res = scraper();
-  if (res === "success") {
+const job = new CronJob("0 */2 * * * *", async function () {
+  const res = await scraper();
+  if (res.status === "success") {
     console.log("Scraper Success");
   } else {
-    console.log("Scraper failed");
+    console.log(res);
   }
 });
 console.log("cron start");

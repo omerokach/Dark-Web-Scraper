@@ -1,13 +1,27 @@
 const app = require("./app");
 const mongoose = require("mongoose");
+const server = require("http").createServer(app);
+const {scraperStatus} = require('./utils/utils')
+const io = require("socket.io")(server, {
+  cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] },
+});
 const PORT = 8080;
 
-app.listen(PORT, () => {
+// Socket setup
+io.on("connection", (socket) => {
+  console.log("Socket connected!");
+  socket.emit("newPosts", scraperStatus)
+  socket.on("disconnect", () => {
+    console.log(`user has disconnected`);
+  });
+});
+
+server.listen(PORT, () => {
   mongoose
     .connect("mongodb://localhost:27017/onionScraper", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: false,  
+      useFindAndModify: false,
       useCreateIndex: true,
     })
     .then(() => {

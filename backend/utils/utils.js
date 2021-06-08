@@ -1,6 +1,11 @@
 const Post = require("../modules/post-schema");
 const User = require("../modules/user-schema");
 const axios = require("axios");
+const scraperStatus = {
+  status : "success",
+  newPosts: [],
+  newPostsLength: 0
+};
 
 const cheerio = require("cheerio");
 
@@ -10,16 +15,21 @@ const ifExistUser = async (email) => {
 };
 
 const addPost = async (postsArray) => {
+  const newPosts = [];
   for (const post of postsArray) {
     const findPost = await Post.find({ body: post.body, title: post.title });
     if (findPost.length === 0) {
       try {
+        newPosts.push(post)
         const res = await Post.create(post);
       } catch (error) {
         console.log(error);
       }
     }
   }
+  scraperStatus.status = 'success'
+  scraperStatus.newPosts = newPosts
+  scraperStatus.newPostsLength = newPosts.length
   return;
 };
 
@@ -68,9 +78,12 @@ const scraper = async () => {
     await addPost(totalPostsArray);
     return "success"
   } catch (error) {
+    scraperStatus.status = 'failed'
+    scraperStatus.newPosts = []
+    scraperStatus.newPostsLength = 0
     console.log(error);
-    return "fail"
+    return error
   }
 };
 
-module.exports = { addPost, ifExistUser, scraper };
+module.exports = { addPost, ifExistUser, scraper, scraperStatus };
