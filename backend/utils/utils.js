@@ -66,8 +66,10 @@ const scraper = async () => {
       totalPostsArray[i].date = at[0];
     });
     await addPost(totalPostsArray);
+    return "success"
   } catch (error) {
     console.log(error);
+    return "fail"
   }
 };
 
