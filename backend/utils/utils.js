@@ -11,24 +11,10 @@ const scraperStatus = {
   newPostsLength: 0,
 };
 
-const chartData = async () => {
-  const pieChartInfo = await Chart.find({ type: "pie" });
-  const allPosts = await Post.find({});
-  console.log(pieChartInfo);
-  if (pieChartInfo.length === 0) {
-    pieCpieChartInfo = {
-      type: "pie",
-      sexual: 0,
-      guns: 0,
-      money: 0,
-      dataBase: 0,
-      other: 0,
-    };
-    const res = await Chart.create(pieCpieChartInfo);
-    console.log(res);
-  }
-  console.log(pieChartInfo);
-};
+const getPie = async () => {
+  const res = Chart.findOne({type: "pie"});
+  return res.data;
+}
 
 const ifExistUser = async (email) => {
   const ifExist = await User.find({ email: email });
@@ -37,10 +23,22 @@ const ifExistUser = async (email) => {
 
 const addPost = async (postsArray) => {
   const newPosts = [];
+  let chartUpdate
+  const pieFromData = await Chart.findOne({type:"pie"});
   for (const post of postsArray) {
     const findPost = await Post.find({ body: post.body, title: post.title });
     if (findPost.length === 0) {
       try {
+        const tag =  post.tag;
+        chartUpdate = await Chart.findOne({type:"pie"}, (err, doc) => {
+          if(doc){
+            if(tag !== 'other'){
+              doc[tag] = doc[tag] + 1;
+            }
+            doc.sumVals = doc.sumVals + 1;
+            doc.save(); 
+          }
+        });
         newPosts.push(post);
         const res = await Post.create(post);
       } catch (error) {
@@ -51,6 +49,7 @@ const addPost = async (postsArray) => {
   scraperStatus.status = "success";
   scraperStatus.newPosts = newPosts;
   scraperStatus.newPostsLength = newPosts.length;
+  scraperStatus.pieData = pieFromData;
   return;
 };
 

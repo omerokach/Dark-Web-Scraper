@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ChipsArray() {
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const [clickedWords, setClickedWords] = useState([]);
   const { currentUser } = useAuth();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -40,24 +40,33 @@ export default function ChipsArray() {
   const [keyWords, setKeyWords] = useState([]);
 
   const handleDelete = (chipToDelete) => async () => {
-      setKeyWords((chips) =>
+    setKeyWords((chips) =>
       chips.filter((chip) => chip.key !== chipToDelete.key)
-      );
-      const keyWordsArr = keyWords.filter((keyWord) => keyWord.key !== chipToDelete.key)
-      const res = await axios.put("http://localhost:8080/api/user/key-words", {
-          keyWordsArr: keyWordsArr,
-          userEmail: currentUser.email,
-        });
-  };
-  const handleKeyPick = async (keyWord) => {
-    setKeyWords((prev) => [...prev, { label: keyWord, key: keyWords.length }]);
-    const keyWordsArr = keyWords.map((item) => item.label);
-    keyWordsArr.push(keyWord);
-    console.log(keyWordsArr);
+    );
+    const keyWordsArr = keyWords.filter(
+      (keyWord) => keyWord.key !== chipToDelete.key
+    );
+    const updateKeysArr = keyWords.map((item) => item.label);
     const res = await axios.put("http://localhost:8080/api/user/key-words", {
-      keyWordsArr: keyWordsArr,
+      keyWordsArr: updateKeysArr,
       userEmail: currentUser.email,
     });
+  };
+  const handleKeyPick = async (keyWord) => {
+    if (clickedWords.indexOf(keyWord) === -1) {
+      setClickedWords((prev) => [...prev, keyWord]);
+      setKeyWords((prev) => [
+        ...prev,
+        { label: keyWord, key: keyWords.length },
+      ]);
+      const keyWordsArr = keyWords.map((item) => item.label);
+      keyWordsArr.push(keyWord);
+      // console.log(keyWordsArr);
+      const res = await axios.put("http://localhost:8080/api/user/key-words", {
+        keyWordsArr: keyWordsArr,
+        userEmail: currentUser.email,
+      });
+    }
   };
 
   return (
@@ -77,9 +86,14 @@ export default function ChipsArray() {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={() => handleKeyPick("Weapons")}>Weapons</MenuItem>
+          <MenuItem onClick={() => handleKeyPick("violence")}>
+            violence
+          </MenuItem>
           <MenuItem onClick={() => handleKeyPick("Sexual")}>Sexual</MenuItem>
           <MenuItem onClick={() => handleKeyPick("money")}>money</MenuItem>
+          <MenuItem onClick={() => handleKeyPick("dataBase")}>
+            dataBase
+          </MenuItem>
           <MenuItem onClick={() => handleKeyPick("Other")}>Other</MenuItem>
         </Menu>
       </div>

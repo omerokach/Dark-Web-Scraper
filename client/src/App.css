@@ -1,8 +1,56 @@
-#logout{
-    margin-right: 0;
-    float: right;
-    display: inline;
+#logout {
+  margin-right: 0;
+  float: right;
+  display: inline;
 }
-#avatar{
-    margin: 1rem 1rem;
+#avatar {
+  margin: 1rem 1rem;
 }
+.charts {
+  display: flex;
+}
+.post {
+  box-sizing: border-box;
+  width: 100%;
+}
+.posts {
+  flex-wrap: wrap;
+}
+.pieChart {
+  margin-left: 10rem;
+}
+.barChart {
+  margin-top: 10rem;
+}
+.dashboard-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  border: 1px solid black;
+  width: 85%;
+  border-radius: 10px;
+}
+.alertForm {
+  margin-top: 5rem;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.alertFormContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* @media screen and (min-width: 40em) {
+    .post {
+       max-width: calc(50% -  1em);
+    }
+}
+ 
+@media screen and (min-width: 60em) {
+    .post {
+        max-width: calc(25% - 1em);
+    }
+} */

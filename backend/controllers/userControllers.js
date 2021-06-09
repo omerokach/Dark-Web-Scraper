@@ -1,5 +1,6 @@
 const { ifExistUser } = require("../utils/utils");
 const User = require("../modules/user-schema");
+
 module.exports.user_post = async (req, res) => {
   console.log(req.body);
   const { email } = req.body;

@@ -7,21 +7,21 @@ import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
-import MenuList from '@material-ui/core/MenuList';
+import MenuList from "@material-ui/core/MenuList";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-
-import KeyWordsBar from './KeyWordsBar'
+import { useData } from "../context/DataContext";
+import KeyWordsBar from "./KeyWordsBar";
 import { useAuth } from "../context/AuthContext";
 import { useHistory } from "react-router";
+import SideBar from "./SideBar";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -88,12 +88,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header({ posts, newPosts }) {
+export default function Header({}) {
   const [error, setError] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-
+  const { posts, newPosts } = useData();
+  console.log(posts);
   const { currentUser, logout } = useAuth();
 
   const history = useHistory();
@@ -170,14 +171,7 @@ export default function Header({ posts, newPosts }) {
     <div className={`${classes.grow} header`}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
+          <SideBar />
           <Typography className={classes.title} variant="h6" noWrap>
             Dark-Web Scraper
           </Typography>
@@ -200,7 +194,6 @@ export default function Header({ posts, newPosts }) {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-          <KeyWordsBar />
           <IconButton
             ref={anchorRef}
             aria-controls={open ? "menu-list-grow" : undefined}
@@ -235,9 +228,12 @@ export default function Header({ posts, newPosts }) {
                       id="menu-list-grow"
                       onKeyDown={handleListKeyDown}
                     >
-                      <MenuItem onClick={handleClose}>{`there is ${newPosts.length} new posts in general`}</MenuItem>
-                      <MenuItem onClick={handleClose}>My account</MenuItem>
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      <MenuItem
+                        onClick={handleClose}
+                      >{`there is ${newPosts.length} new posts in general`}</MenuItem>
+                      <MenuItem
+                        onClick={handleClose}
+                      >{`there is ${newPosts.length} for your key words`}</MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>
@@ -245,7 +241,7 @@ export default function Header({ posts, newPosts }) {
             )}
           </Popper>
           <Button
-          className={classes.menuButton}
+            className={classes.menuButton}
             id="logout"
             onClick={handleLogOut}
             variant="contained"

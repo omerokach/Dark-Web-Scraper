@@ -21,6 +21,7 @@ const useStyles = makeStyles({
   },
   pos: {
     margin: "1rem 1rem",
+    fontSize: "1rem",
   },
   centerContent: {
     display: "flex",
@@ -34,6 +35,7 @@ export default function SimpleCard({ post }) {
   const bull = <span className={classes.bullet}>•</span>;
 
   return (
+    <div className="post">
     <div className={classes.centerContent}>
       <Card className={classes.root}>
         <CardContent>
@@ -57,6 +59,7 @@ export default function SimpleCard({ post }) {
         </CardContent>
         <CardActions></CardActions>
       </Card>
+    </div>
     </div>
   );
 }
