@@ -2,7 +2,7 @@ const mogoose = require('mongoose');
 
 const postSchema = new mogoose.Schema({
     title: String,
-    tags: String,
+    tag: String,
     body: String,
     author: String,
     date: String

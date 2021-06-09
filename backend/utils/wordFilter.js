@@ -10,6 +10,8 @@ const labeledWords = [
   { keyWord: "nooky", label: "sexual" },
   { keyWord: "relations", label: "sexual" },
   { keyWord: "sex", label: "sexual" },
+  { keyWord: "p0rnhub", label: "sexual" },
+  { keyWord: "p0rn", label: "sexual" },
   { keyWord: "ammo", label: "guns" },
   { keyWord: "arms", label: "guns" },
   { keyWord: "arrow", label: "guns" },

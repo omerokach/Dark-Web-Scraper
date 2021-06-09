@@ -1,17 +1,33 @@
 const Post = require("../modules/post-schema");
 const User = require("../modules/user-schema");
+const Chart = require("../modules/chart-shcema");
 const axios = require("axios");
 const cheerio = require("cheerio");
-const NLPCloudClient = require("nlpcloud");
-const client = new NLPCloudClient(
-  "en_core_web_lg",
-  "b6af9fc6d26c38064cf2b8cb0d50d3f277567d33"
-);
+
 const { labeledWords } = require("./wordFilter");
 const scraperStatus = {
   status: "success",
   newPosts: [],
   newPostsLength: 0,
+};
+
+const chartData = async () => {
+  const pieChartInfo = await Chart.find({ type: "pie" });
+  const allPosts = await Post.find({});
+  console.log(pieChartInfo);
+  if (pieChartInfo.length === 0) {
+    pieCpieChartInfo = {
+      type: "pie",
+      sexual: 0,
+      guns: 0,
+      money: 0,
+      dataBase: 0,
+      other: 0,
+    };
+    const res = await Chart.create(pieCpieChartInfo);
+    console.log(res);
+  }
+  console.log(pieChartInfo);
 };
 
 const ifExistUser = async (email) => {
@@ -23,7 +39,6 @@ const addPost = async (postsArray) => {
   const newPosts = [];
   for (const post of postsArray) {
     const findPost = await Post.find({ body: post.body, title: post.title });
-    console.log(findPost);
     if (findPost.length === 0) {
       try {
         newPosts.push(post);
@@ -39,18 +54,23 @@ const addPost = async (postsArray) => {
   return;
 };
 
-const tagFunc = async (title) => {
-  const tag = 'other';
-  const promise = labeledWords.forEach((word) => {
-    let search = `(?=.*)${word.keyWord}(?<=.*)`;
-    let regex = new RegExp(search, "i");
-    if (regex.test(title)) {
-      tag = word.label;
+const tagFunc = async (totalPostsArray) => {
+  const totalPostsArrayWithTags = [...totalPostsArray];
+  for (let post of totalPostsArrayWithTags) {
+    let title = post.title;
+    let wordIndex = 0;
+    let tag = "other";
+    while (wordIndex !== labeledWords.length - 1 && tag === "other") {
+      let search = `(?=.*)${labeledWords[wordIndex].keyWord}(?<=.*)`;
+      let regex = new RegExp(search, "i");
+      if (regex.test(title)) {
+        tag = labeledWords[wordIndex].label;
+      }
+      wordIndex++;
     }
-  });
-  Promise.all(promise).then(()=> {
-    return tag
-  })
+    post.tag = tag;
+  }
+  return totalPostsArrayWithTags;
 };
 
 const scraper = async () => {
@@ -68,8 +88,7 @@ const scraper = async () => {
       let newstr = titleString.replace(/\\t|\\n|"/g, (match) => {
         return "";
       });
-      const tagsForTitle = tagFunc(newstr);
-      totalPostsArray.push({ title: newstr, tags: tagsForTitle });
+      totalPostsArray.push({ title: newstr });
     });
     $("ol").each((i, element) => {
       totalPostsArray[i].body = $(element)
@@ -96,7 +115,8 @@ const scraper = async () => {
       totalPostsArray[i].author = author[0];
       totalPostsArray[i].date = at[0];
     });
-    await addPost(totalPostsArray);
+    const totalPostsArrayWithTag = await tagFunc(totalPostsArray);
+    await addPost(totalPostsArrayWithTag);
     return "success";
   } catch (error) {
     scraperStatus.status = "failed";
