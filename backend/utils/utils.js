@@ -3,6 +3,7 @@ const User = require("../modules/user-schema");
 const Chart = require("../modules/chart-shcema");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const {intervalMin} = require('../controllers/intervalController')
 
 const { labeledWords } = require("./wordFilter");
 const scraperStatus = {
@@ -23,7 +24,6 @@ const ifExistUser = async (email) => {
 
 const addPost = async (postsArray) => {
   const newPosts = [];
-  let chartUpdate
   const pieFromData = await Chart.findOne({type:"pie"});
   for (const post of postsArray) {
     const findPost = await Post.find({ body: post.body, title: post.title });
@@ -116,6 +116,7 @@ const scraper = async () => {
     });
     const totalPostsArrayWithTag = await tagFunc(totalPostsArray);
     await addPost(totalPostsArrayWithTag);
+    io.sockets.emit("newPosts", scraperStatus);
     return "success";
   } catch (error) {
     scraperStatus.status = "failed";

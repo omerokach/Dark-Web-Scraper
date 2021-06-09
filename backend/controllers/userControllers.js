@@ -2,8 +2,8 @@ const { ifExistUser } = require("../utils/utils");
 const User = require("../modules/user-schema");
 
 module.exports.user_post = async (req, res) => {
-  console.log(req.body);
   const { email } = req.body;
+  req.body.interval = 2;
   const ifExist = await ifExistUser(email);
   if (ifExist.length === 0) {
     console.log(ifExist);
@@ -38,7 +38,7 @@ module.exports.addKeyWords = async (req, res) => {
   } catch (error) {
     if (error === "No user with this email") {
       return res.status(409).send(error);
-    }else{
+    } else {
       console.log(error.message);
       return res.status(500).send(error);
     }

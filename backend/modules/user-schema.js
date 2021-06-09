@@ -4,6 +4,7 @@ const userScheman = new mogoose.Schema({
     name: String,
     email: String,
     picture: String,
+    interval: Number,
     keyWords: [String]
 });
 

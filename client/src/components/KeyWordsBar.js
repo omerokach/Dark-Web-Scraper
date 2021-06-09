@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
-import TagFacesIcon from "@material-ui/icons/TagFaces";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -43,11 +42,8 @@ export default function ChipsArray() {
     setKeyWords((chips) =>
       chips.filter((chip) => chip.key !== chipToDelete.key)
     );
-    const keyWordsArr = keyWords.filter(
-      (keyWord) => keyWord.key !== chipToDelete.key
-    );
     const updateKeysArr = keyWords.map((item) => item.label);
-    const res = await axios.put("http://localhost:8080/api/user/key-words", {
+    await axios.put("http://localhost:8080/api/user/key-words", {
       keyWordsArr: updateKeysArr,
       userEmail: currentUser.email,
     });
@@ -61,8 +57,7 @@ export default function ChipsArray() {
       ]);
       const keyWordsArr = keyWords.map((item) => item.label);
       keyWordsArr.push(keyWord);
-      // console.log(keyWordsArr);
-      const res = await axios.put("http://localhost:8080/api/user/key-words", {
+      await axios.put("http://localhost:8080/api/user/key-words", {
         keyWordsArr: keyWordsArr,
         userEmail: currentUser.email,
       });

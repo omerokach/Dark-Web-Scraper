@@ -3,11 +3,9 @@ import BarChartComp from "../components/BarChart";
 import Header from "../components/Header";
 import PieChartComp from "../components/PieChart";
 import { useData } from "../context/DataContext";
-const PIESTYLE = {
 
-}
 function Analystic(props) {
-  const { posts, pieData, barData, newPosts, setPosts, setPieData } = useData();
+  const { pieData, barData } = useData();
 
   return (
     <>

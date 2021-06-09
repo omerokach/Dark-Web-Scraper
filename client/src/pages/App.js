@@ -1,6 +1,5 @@
 import "../App.css";
-import { AuthProvider, useAuth } from "../context/AuthContext";
-import { Container } from "react-bootstrap";
+import { AuthProvider } from "../context/AuthContext";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import PrivateRoute from "./PrivateRoute";

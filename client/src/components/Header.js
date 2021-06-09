@@ -18,7 +18,6 @@ import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { useData } from "../context/DataContext";
-import KeyWordsBar from "./KeyWordsBar";
 import { useAuth } from "../context/AuthContext";
 import { useHistory } from "react-router";
 import SideBar from "./SideBar";
@@ -88,13 +87,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header({}) {
-  const [error, setError] = useState("");
-  const [anchorEl, setAnchorEl] = useState(null);
+export default function Header() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
   const { posts, newPosts } = useData();
-  console.log(posts);
   const { currentUser, logout } = useAuth();
 
   const history = useHistory();
@@ -106,12 +102,11 @@ export default function Header({}) {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleLogOut = async () => {
-    setError("");
     try {
       await logout();
       history.push("/login");
     } catch (error) {
-      setError("Failed to log out");
+      console.log(error);
     }
   };
 

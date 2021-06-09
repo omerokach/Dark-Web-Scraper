@@ -1,9 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 
-import { useAuth } from "../context/AuthContext";
-
 import io from "socket.io-client";
+import { useAuth } from "./AuthContext";
 const DataContext = React.createContext();
 
 export function useData() {
@@ -12,8 +11,8 @@ export function useData() {
 
 export function DataProvider({ children }) {
   const ENDPOINT = "http://localhost:8080";
-  const { currentUser } = useAuth();
   const [posts, setPosts] = useState([]);
+  const {currentUser} = useAuth();
   const [pieChart, setPieChart] = useState({
     type: "pie",
     dataBase: 0,
@@ -25,7 +24,6 @@ export function DataProvider({ children }) {
   });
   const [pieData, setPieData] = useState([]);
   const [barData, setBarData] = useState([]);
-  const [keyWords, setKeyWords] = useState([]);
   const [costumInterval, setCostumInterval] = useState(2);
   const [newPosts, setNewPosts] = useState([]);
   const getPosts = async () => {
@@ -38,10 +36,17 @@ export function DataProvider({ children }) {
     return res.data;
   };
 
+  const getIntervalForUser = async () => {
+    const res = await axios.get(`http://localhost:8080/api/interval/${currentUser.email}`);
+    return res.data;
+  }
+
   useEffect(async () => {
     const posts = await getPosts();
     const pieChart = await getPieData();
-    console.log(pieChart);
+    const interval = await getIntervalForUser(currentUser.email);
+    setCostumInterval(interval)
+    setPieData(pieChart);
     setPosts(posts);
   }, []);
 
@@ -97,7 +102,6 @@ export function DataProvider({ children }) {
     setPieData,
     pieData,
     barData,
-    keyWords,
     newPosts,
     posts,
   };

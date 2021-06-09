@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { PieChart, Pie, Cell, Bar } from "recharts";
+import React from "react";
+import { PieChart, Pie, Cell } from "recharts";
 
 const COLORS = [
   "#0088FE",
@@ -19,7 +19,6 @@ const renderCustomizedLabel = ({
   innerRadius,
   outerRadius,
   percent,
-  index,
 }) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -68,9 +67,8 @@ export default function PieChartComp({ data }) {
           dataKey="value"
         >
           {data.map((entry, index) => {
-            console.log(entry);
             if (entry.value === 0) {
-              return;
+              return <></>;
             } else {
               return (
                 <Cell

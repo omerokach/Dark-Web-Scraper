@@ -1,17 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import React from "react";
 import { useData } from "../context/DataContext";
-import axios from "axios";
 import Header from "../components/Header";
 import PostCard from "../components/PostCard";
-import io from "socket.io-client";
-import PieChartComp from "../components/PieChart";
-import BarChartComp from "../components/BarChart";
-
-function Dashboard(props) {
-  const ENDPOINT = "http://localhost:8080";
-  const { currentUser } = useAuth();
-  const { posts, pieData, barData, newPosts, setPosts, setPieData } = useData();
+function Dashboard() {
+  const { posts, setPosts } = useData();
 
   // useEffect(async () => {
   //   getPieData();
@@ -20,21 +12,6 @@ function Dashboard(props) {
   //   }, 60000);
   //   return () => clearInterval(interval);
   // }, []);
-  const getPosts = async () => {
-    const res = await axios.get("http://localhost:8080/api/posts");
-    return res.data;
-  };
-  const getPieData = async () => {
-    const res = await axios.get("http://localhost:8080/api/chart/pie");
-    return res.data;
-  };
-
-  useEffect(async () => {
-    const posts = await getPosts();
-    const pieChart = await getPieData();
-    console.log(pieChart);
-    setPosts(posts);
-  }, []);
 
   return (
     <div>

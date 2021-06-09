@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm";
 import { Button, Card } from "@material-ui/core";
@@ -11,6 +11,8 @@ import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import { useData } from "../context/DataContext";
+import {useAuth} from '../context/AuthContext'
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -25,11 +27,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AlertConfig() {
+    const {currentUser} = useAuth();
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
   const intervalRef = useRef();
   const { costumInterval, setCostumInterval } = useData();
+  console.log(costumInterval);
+  const handleIntervalPick = async (intervalValue,event) => {
+    handleClose(event);
+    try {
+        await axios.put("http://localhost:8080/api/interval", {userEmail: currentUser.email, interval:intervalValue});
+        setCostumInterval(intervalValue);
+    } catch (error) {
+        console.log(error);
+    }
+  };
 
   const handleSubmit = async () => {
     console.log(intervalRef);
@@ -55,8 +68,8 @@ export default function AlertConfig() {
   }
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
+  const prevOpen = useRef(open);
+  useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
@@ -114,10 +127,18 @@ export default function AlertConfig() {
                               id="menu-list-grow"
                               onKeyDown={handleListKeyDown}
                             >
-                              <MenuItem onClick={handleClose}>0.5 Min</MenuItem>
-                              <MenuItem onClick={handleClose}>1 Min</MenuItem>
-                              <MenuItem onClick={handleClose}>2 Min</MenuItem>
-                              <MenuItem onClick={handleClose}>3 Min</MenuItem>
+                              <MenuItem onClick={(e) => handleIntervalPick(1,e)}>
+                                1 Min
+                              </MenuItem>
+                              <MenuItem onClick={(e) => handleIntervalPick(2,e)}>
+                                2 Min
+                              </MenuItem>
+                              <MenuItem onClick={(e) => handleIntervalPick(3,e)}>
+                                3 Min
+                              </MenuItem>
+                              <MenuItem onClick={(e) => handleIntervalPick(4,e)}>
+                                4 Min
+                              </MenuItem>
                             </MenuList>
                           </ClickAwayListener>
                         </Paper>
