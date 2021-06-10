@@ -27,7 +27,7 @@ const getInterVal = async (req, res) => {
       if (!user.interval) {
         return res.status(200).send("2");
       } else {
-        return res.status(200).send(user.interval);
+        return res.status(200).json({interval: user.interval});
       }
     }
   } catch (error) {
