@@ -1,13 +1,12 @@
 const express = require("express");
 const app = express();
-const {intervalMin} = require('./controllers/intervalController')
+const { intervalMin } = require("./controllers/intervalController");
 const cors = require("cors");
 const api = require("./routes/index.js");
 const { scraper } = require("./utils/utils");
 const cron = require("node-cron");
 
-cron.schedule(`* ${intervalMin} * * * * * * *`, async () => {
-  console.log(intervalMin);
+cron.schedule(`*/2 * * * *`, async () => {
   const res = await scraper();
   if (res === "success") {
     console.log("Scraper Success");

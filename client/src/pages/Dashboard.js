@@ -5,14 +5,6 @@ import PostCard from "../components/PostCard";
 function Dashboard() {
   const { posts, setPosts } = useData();
 
-  // useEffect(async () => {
-  //   getPieData();
-  //   const interval = setInterval(() => {
-  //     getPieData();
-  //   }, 60000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
   return (
     <div>
       <header

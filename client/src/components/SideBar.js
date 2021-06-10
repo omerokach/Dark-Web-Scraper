@@ -65,7 +65,7 @@ export default function SideBar() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {["Alert-config", "Analystics", "Dashboard"].map((text, index) => (
+        {["Dashboard", "Analystics","Alert-config"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}

@@ -8,6 +8,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import axios from "axios";
 
 import { useAuth } from "../context/AuthContext";
+import { useData } from "../context/DataContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,8 +26,27 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ChipsArray() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [clickedWords, setClickedWords] = useState([]);
   const { currentUser } = useAuth();
+  const { userKeyWords } = useData();
+  const [clickedWords, setClickedWords] = useState([]);
+
+  const classes = useStyles();
+  const [keyWords, setKeyWords] = useState([]);
+
+  const getUserKeyWords = async () => {
+    const res = await axios.get(
+      `http://localhost:8080/api/user/key-words/${currentUser.email}`
+    );
+    const keysArr = res.data.userKeyWords.map((item, i) => {
+      return { key: i, label: item };
+    });
+    setKeyWords(keysArr);
+  };
+
+  useState(() => {
+    getUserKeyWords();
+  }, []);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -35,14 +55,13 @@ export default function ChipsArray() {
     setAnchorEl(null);
   };
 
-  const classes = useStyles();
-  const [keyWords, setKeyWords] = useState([]);
-
   const handleDelete = (chipToDelete) => async () => {
     setKeyWords((chips) =>
       chips.filter((chip) => chip.key !== chipToDelete.key)
     );
-    const updateKeysArr = keyWords.map((item) => item.label);
+    const updateKeysArr = keyWords.filter(
+      (chip) => chip.key !== chipToDelete.key
+    );
     await axios.put("http://localhost:8080/api/user/key-words", {
       keyWordsArr: updateKeysArr,
       userEmail: currentUser.email,

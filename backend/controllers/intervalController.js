@@ -1,4 +1,3 @@
-let intervalMin = 2;
 const User = require("../modules/user-schema");
 
 const updateInterval = async (req, res) => {
@@ -39,4 +38,4 @@ const getInterVal = async (req, res) => {
   }
 };
 
-module.exports = { updateInterval, intervalMin, getInterVal };
+module.exports = { updateInterval, getInterVal };

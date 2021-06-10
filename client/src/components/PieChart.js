@@ -37,6 +37,7 @@ const renderCustomizedLabel = ({
   );
 };
 export default function PieChartComp({ data }) {
+  console.log(data);
   return (
     <div>
       <div className="tagsColor" style={{display:"flex"}}>

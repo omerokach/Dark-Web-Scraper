@@ -22,13 +22,19 @@
 .barChart {
   margin-top: 10rem;
 }
+.post-body {
+  position: relative;
+  margin-left: 15px;
+  content: "";
+}
 .dashboard-data {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: auto;
   border: 1px solid black;
-  width: 85%;
+  width: 100%;
+  padding: 1rem 1rem;
   border-radius: 10px;
 }
 .alertForm {

@@ -35,30 +35,30 @@ export default function SimpleCard({ post }) {
 
   return (
     <div className="post">
-    <div className={classes.centerContent}>
-      <Card className={classes.root}>
-        <CardContent>
-          <Typography
-            className={classes.centerContent}
-            gutterBottom
-            variant="h5"
-            component="h2"
-          >
-            {post.title}
-          </Typography>
-          <Typography className={classes.pos} color="textSecondary">
-            {post.body}
-          </Typography>
-          <Typography className={classes.pos} color="textSecondary">
-            By: {post.author}
-          </Typography>
-          <Typography className={classes.pos} color="textSecondary">
-            {post.date}
-          </Typography>
-        </CardContent>
-        <CardActions></CardActions>
-      </Card>
-    </div>
+      <div className={classes.centerContent}>
+        <Card className={classes.root}>
+          <CardContent>
+            <Typography
+              className={classes.centerContent}
+              gutterBottom
+              variant="h5"
+              component="h2"
+            >
+              {post.title}
+            </Typography>
+            <Typography className={classes.pos} color="textSecondary">
+              <div className="post-body">{post.body}</div>
+            </Typography>
+            <Typography className={classes.pos} color="textSecondary">
+              By: {post.author}
+            </Typography>
+            <Typography className={classes.pos} color="textSecondary">
+              {post.date}
+            </Typography>
+          </CardContent>
+          <CardActions></CardActions>
+        </Card>
+      </div>
     </div>
   );
 }

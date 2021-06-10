@@ -112,7 +112,6 @@ const labeledWords = [
   { keyWord: "resources", label: "money" },
   { keyWord: "advocate", label: "money" },
   { keyWord: "ally", label: "money" },
-  { keyWord: "angel", label: "money" },
   { keyWord: "benefactor", label: "money" },
   { keyWord: "champion", label: "money" },
   { keyWord: "endorser", label: "money" },

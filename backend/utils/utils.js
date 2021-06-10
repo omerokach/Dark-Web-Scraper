@@ -3,7 +3,6 @@ const User = require("../modules/user-schema");
 const Chart = require("../modules/chart-shcema");
 const axios = require("axios");
 const cheerio = require("cheerio");
-const {intervalMin} = require('../controllers/intervalController')
 
 const { labeledWords } = require("./wordFilter");
 const scraperStatus = {
@@ -11,11 +10,6 @@ const scraperStatus = {
   newPosts: [],
   newPostsLength: 0,
 };
-
-const getPie = async () => {
-  const res = Chart.findOne({type: "pie"});
-  return res.data;
-}
 
 const ifExistUser = async (email) => {
   const ifExist = await User.find({ email: email });
@@ -40,7 +34,7 @@ const addPost = async (postsArray) => {
           }
         });
         newPosts.push(post);
-        const res = await Post.create(post);
+        await Post.create(post);
       } catch (error) {
         console.log(error);
       }

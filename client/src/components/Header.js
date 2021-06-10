@@ -90,9 +90,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-  const { posts, newPosts } = useData();
+  const { posts, newPosts,newPostsByKeyWords } = useData();
   const { currentUser, logout } = useAuth();
-
+  console.log(newPostsByKeyWords);
   const history = useHistory();
 
   const classes = useStyles();
@@ -175,7 +175,7 @@ export default function Header() {
               There are {posts.length} posts
             </span>
           </Typography>
-          <Avatar id="avatar" alt="Remy Sharp" src={currentUser.picture} />
+          <Avatar id="avatar" alt="Remy Sharp" src={currentUser.picture? currentUser.picture : null} />
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -197,7 +197,7 @@ export default function Header() {
             aria-label={`show 17 new notifications`}
             color="inherit"
           >
-            <Badge badgeContent={newPosts.length} color="secondary">
+            <Badge badgeContent={newPosts.length + newPostsByKeyWords} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
@@ -228,7 +228,7 @@ export default function Header() {
                       >{`there is ${newPosts.length} new posts in general`}</MenuItem>
                       <MenuItem
                         onClick={handleClose}
-                      >{`there is ${newPosts.length} for your key words`}</MenuItem>
+                      >{`there is ${newPostsByKeyWords} for your key words`}</MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>
