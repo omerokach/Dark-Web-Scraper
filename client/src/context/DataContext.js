@@ -12,6 +12,8 @@ export function useData() {
 export function DataProvider({ children }) {
   const ENDPOINT = "http://localhost:8080";
   const [posts, setPosts] = useState([]);
+  const [searchedPosts , setSearchedPosts] = useState([])
+  const [searchFilter, setSearchFilter] = useState();
   const { currentUser } = useAuth();
   const [pieChart, setPieChart] = useState({
     type: "pie",
@@ -27,6 +29,7 @@ export function DataProvider({ children }) {
   const [costumInterval, setCostumInterval] = useState(2);
   const [newPosts, setNewPosts] = useState([]);
   const [newPostsByKeyWords, setNewPostsByKeyWords] = useState(0);
+
   const getPosts = async () => {
     const res = await axios.get("http://localhost:8080/api/posts");
     return res.data;
@@ -65,6 +68,23 @@ export function DataProvider({ children }) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    console.log("use Effect search filter");
+    console.log(searchFilter  );
+    if(searchFilter !== ""){
+      const filteredPosts = posts.filter((post) => {
+        const stringifiedPost = JSON.stringify(post);
+        let search = `(?=.*)${searchFilter}(?<=.*)`;
+        let regex = new RegExp(search, "i");
+        if (regex.test(stringifiedPost)) {
+          return post;
+        }
+      })
+      console.log(filteredPosts);
+      setSearchedPosts(filteredPosts);
+    }
+  }, [searchFilter]);
 
   useEffect(async () => {
     if (currentUser) {
@@ -106,37 +126,44 @@ export function DataProvider({ children }) {
     try {
       const socket = io(ENDPOINT);
       socket.on("newPosts", async (scraperStatus) => {
-        console.log(scraperStatus);
-        if (scraperStatus.pieData.sumVals !== pieChart.sumVals) {
-          const dataForPie = [
-            { name: "money", value: scraperStatus.pieData.money },
-            { name: "other", value: scraperStatus.pieData.other },
-            { name: "dataBase", value: scraperStatus.pieData.dataBase },
-            { name: "sexual", value: scraperStatus.pieData.sexual },
-            { name: "violence", value: scraperStatus.pieData.violence },
-          ];
-          const dataForBar = [
-            { name: "money", pv: scraperStatus.pieData.money, uv: 0, amt: 0 },
-            { name: "other", pv: scraperStatus.pieData.other, uv: 0, amt: 0 },
-            {
-              name: "dataBase",
-              pv: scraperStatus.pieData.dataBase,
-              uv: 0,
-              amt: 0,
-            },
-            { name: "sexual", pv: scraperStatus.pieData.sexual, uv: 0, amt: 0 },
-            {
-              name: "violence",
-              pv: scraperStatus.pieData.violence,
-              uv: 0,
-              amt: 0,
-            },
-          ];
-          setBarData(dataForBar);
-          setPieData(dataForPie);
-          setPieChart(scraperStatus.pieData);
-        }
-        if (scraperStatus.newPostsLength !== 0) {
+        if (scraperStatus.status === "failed") {
+          console.log(scraperStatus);
+        } else {
+          console.log(scraperStatus);
+          if (scraperStatus.pieData.sumVals !== pieChart.sumVals) {
+            const dataForPie = [
+              { name: "money", value: scraperStatus.pieData.money },
+              { name: "other", value: scraperStatus.pieData.other },
+              { name: "dataBase", value: scraperStatus.pieData.dataBase },
+              { name: "sexual", value: scraperStatus.pieData.sexual },
+              { name: "violence", value: scraperStatus.pieData.violence },
+            ];
+            const dataForBar = [
+              { name: "money", pv: scraperStatus.pieData.money, uv: 0, amt: 0 },
+              { name: "other", pv: scraperStatus.pieData.other, uv: 0, amt: 0 },
+              {
+                name: "dataBase",
+                pv: scraperStatus.pieData.dataBase,
+                uv: 0,
+                amt: 0,
+              },
+              {
+                name: "sexual",
+                pv: scraperStatus.pieData.sexual,
+                uv: 0,
+                amt: 0,
+              },
+              {
+                name: "violence",
+                pv: scraperStatus.pieData.violence,
+                uv: 0,
+                amt: 0,
+              },
+            ];
+            setBarData(dataForBar);
+            setPieData(dataForPie);
+            setPieChart(scraperStatus.pieData);
+          }
           const userKeyWords = await getUserKeyWords();
           const countIfHavePostWithKeys = compareTagsAmount(
             userKeyWords,
@@ -155,6 +182,8 @@ export function DataProvider({ children }) {
   }, [ENDPOINT]);
 
   const value = {
+    searchedPosts,
+    setSearchFilter,
     newPostsByKeyWords,
     costumInterval,
     setCostumInterval,

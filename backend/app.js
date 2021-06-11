@@ -7,6 +7,7 @@ const { scraper } = require("./utils/utils");
 const cron = require("node-cron");
 
 cron.schedule(`*/2 * * * *`, async () => {
+  console.log("scraper start");
   const res = await scraper();
   if (res === "success") {
     console.log("Scraper Success");

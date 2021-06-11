@@ -54,8 +54,8 @@ const tagFunc = async (totalPostsArray) => {
     let wordIndex = 0;
     let tag = "other";
     while (wordIndex !== labeledWords.length - 1 && tag === "other") {
-      let search = `(?=.*)${labeledWords[wordIndex].keyWord}(?<=.*)`;
-      let regex = new RegExp(search, "i");
+        let search = `(?=.*)${labeledWords[wordIndex].keyWord}(?<=.*)`;
+        let regex = new RegExp(search, "i");
       if (regex.test(title)) {
         tag = labeledWords[wordIndex].label;
       }
@@ -117,7 +117,8 @@ const scraper = async () => {
     scraperStatus.newPosts = [];
     scraperStatus.newPostsLength = 0;
     console.log(error);
-    return error;
+    io.sockets.emit("newPosts", scraperStatus);
+    return error.res.statusText;
   }
 };
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -21,6 +21,7 @@ import { useData } from "../context/DataContext";
 import { useAuth } from "../context/AuthContext";
 import { useHistory } from "react-router";
 import SideBar from "./SideBar";
+import { debounce } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -87,12 +88,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function Header() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-  const { posts, newPosts,newPostsByKeyWords } = useData();
+  const { posts, newPosts, newPostsByKeyWords, setSearchFilter } = useData();
+  const [filter, setFilter] = useState("");
   const { currentUser, logout } = useAuth();
-  console.log(newPostsByKeyWords);
   const history = useHistory();
 
   const classes = useStyles();
@@ -100,6 +102,14 @@ export default function Header() {
   const anchorRef = useRef(null);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleSearch = debounce((text) => {
+    setFilter(text);
+  }, 500);
+
+  useEffect(() => {
+    setSearchFilter(filter)
+  }, [filter]); 
 
   const handleLogOut = async () => {
     try {
@@ -175,12 +185,17 @@ export default function Header() {
               There are {posts.length} posts
             </span>
           </Typography>
-          <Avatar id="avatar" alt="Remy Sharp" src={currentUser.picture? currentUser.picture : null} />
+          <Avatar
+            id="avatar"
+            alt="Remy Sharp"
+            src={currentUser.picture ? currentUser.picture : null}
+          />
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
             <InputBase
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
@@ -197,7 +212,10 @@ export default function Header() {
             aria-label={`show 17 new notifications`}
             color="inherit"
           >
-            <Badge badgeContent={newPosts.length + newPostsByKeyWords} color="secondary">
+            <Badge
+              badgeContent={newPosts.length + newPostsByKeyWords}
+              color="secondary"
+            >
               <NotificationsIcon />
             </Badge>
           </IconButton>
@@ -225,10 +243,10 @@ export default function Header() {
                     >
                       <MenuItem
                         onClick={handleClose}
-                      >{`there is ${newPosts.length} new posts in general`}</MenuItem>
+                      >{`There is ${newPosts.length} new posts in general`}</MenuItem>
                       <MenuItem
                         onClick={handleClose}
-                      >{`there is ${newPostsByKeyWords} for your key words`}</MenuItem>
+                      >{`There is ${newPostsByKeyWords} for your key words`}</MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>

@@ -33,7 +33,6 @@ export default function AlertConfig() {
   const anchorRef = useRef(null);
   const intervalRef = useRef();
   const { costumInterval, setCostumInterval } = useData();
-  console.log(costumInterval);
   const handleIntervalPick = async (intervalValue,event) => {
     handleClose(event);
     try {

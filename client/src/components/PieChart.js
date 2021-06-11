@@ -73,7 +73,7 @@ export default function PieChartComp({ data }) {
             } else {
               return (
                 <Cell
-                  key={`cell-${index}`}
+                  key={`cell-${index}`} 
                   fill={COLORS[index % COLORS.length]}
                 />
               );

@@ -50,7 +50,6 @@ module.exports.addKeyWords = async (req, res) => {
     if (!user) {
       throw "No user with this email";
     }
-    console.log(user);
     res.status(200).json(user);
   } catch (error) {
     if (error === "No user with this email") {
