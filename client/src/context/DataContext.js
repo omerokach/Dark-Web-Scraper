@@ -12,7 +12,7 @@ export function useData() {
 export function DataProvider({ children }) {
   const ENDPOINT = "http://localhost:8080";
   const [posts, setPosts] = useState([]);
-  const [searchedPosts , setSearchedPosts] = useState([])
+  const [searchedPosts, setSearchedPosts] = useState([]);
   const [searchFilter, setSearchFilter] = useState();
   const { currentUser } = useAuth();
   const [pieChart, setPieChart] = useState({
@@ -70,9 +70,7 @@ export function DataProvider({ children }) {
   };
 
   useEffect(() => {
-    console.log("use Effect search filter");
-    console.log(searchFilter  );
-    if(searchFilter !== ""){
+    if (searchFilter !== "") {
       const filteredPosts = posts.filter((post) => {
         const stringifiedPost = JSON.stringify(post);
         let search = `(?=.*)${searchFilter}(?<=.*)`;
@@ -80,9 +78,11 @@ export function DataProvider({ children }) {
         if (regex.test(stringifiedPost)) {
           return post;
         }
-      })
+      });
       console.log(filteredPosts);
       setSearchedPosts(filteredPosts);
+    } else {
+      setSearchedPosts([]);
     }
   }, [searchFilter]);
 
