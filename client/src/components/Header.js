@@ -88,11 +88,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export default function Header() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-  const { posts, newPosts, newPostsByKeyWords, setSearchFilter } = useData();
+  const {
+    posts,
+    newPosts,
+    newPostsByKeyWords,
+    setSearchFilter,
+    searchedPosts,
+  } = useData();
   const [filter, setFilter] = useState("");
   const { currentUser, logout } = useAuth();
   const history = useHistory();
@@ -108,8 +113,8 @@ export default function Header() {
   }, 500);
 
   useEffect(() => {
-    setSearchFilter(filter)
-  }, [filter]); 
+    setSearchFilter(filter);
+  }, [filter]);
 
   const handleLogOut = async () => {
     try {
@@ -204,6 +209,9 @@ export default function Header() {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
+          <Typography className={classes.title} variant="h6" noWrap>
+            {`There are ${searchedPosts.length} results`}
+          </Typography>
           <IconButton
             ref={anchorRef}
             aria-controls={open ? "menu-list-grow" : undefined}
