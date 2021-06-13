@@ -1,0 +1,21 @@
+services:
+    mongodb:
+      image: mongo:latest
+      restart: always
+      hostname: mongodb
+      ports:
+        - "27017:27017"
+      volumes:
+        - mongo_db:/data/db
+  
+    backend:
+      build: ./backend
+      ports:
+        - "8080:8080"
+      restart: always
+  
+    torproxy:
+      image: dperson/torproxy:latest
+  
+volumes:
+    mongo_db:

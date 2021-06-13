@@ -17,7 +17,7 @@ io.on("connection", (socket) => {
 
 server.listen(PORT, () => {
   mongoose
-    .connect("mongodb://localhost:27017/onionScraper", {
+    .connect("http://mongodb:27017/onionScraper", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
@@ -26,8 +26,9 @@ server.listen(PORT, () => {
     .then(() => {
       console.log("Mongodb connected");
     })
-    .catch(() => {
+    .catch((error) => {
       console.log("There was a problem connecting to mongodb");
+      console.log(error);
     });
   console.log("App listeting to port", PORT);
 });
